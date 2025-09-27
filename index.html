@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Security Monitoring System</title>
+    <title>HDRP Staff Panel</title>
     <style>
         :root {
             --bg-primary: #0d1117;
@@ -77,6 +77,7 @@
             font-size: 1.75rem;
             font-weight: 600;
             margin-bottom: 8px;
+            color: var(--accent-primary);
         }
 
         .login-header p {
@@ -141,6 +142,25 @@
             color: var(--text-primary);
             font-size: 1rem;
             cursor: pointer;
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 80px;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15);
         }
 
         .btn {
@@ -209,6 +229,7 @@
         .topbar-brand {
             font-weight: 600;
             font-size: 1.1rem;
+            color: var(--accent-primary);
         }
 
         .nav-tabs {
@@ -375,11 +396,6 @@
             border-color: var(--accent-primary);
         }
 
-        .stat-icon {
-            font-size: 2rem;
-            margin-bottom: 12px;
-        }
-
         .stat-number {
             font-size: 2rem;
             font-weight: 600;
@@ -394,30 +410,30 @@
             letter-spacing: 0.5px;
         }
 
-        .user-table {
+        .staff-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 16px;
         }
 
-        .user-table th,
-        .user-table td {
+        .staff-table th,
+        .staff-table td {
             padding: 12px 16px;
             text-align: left;
             border-bottom: 1px solid var(--border-color);
         }
 
-        .user-table th {
+        .staff-table th {
             background: var(--bg-tertiary);
             font-weight: 600;
             color: var(--text-primary);
         }
 
-        .user-table tr:hover {
+        .staff-table tr:hover {
             background: rgba(88, 166, 255, 0.05);
         }
 
-        .user-actions {
+        .staff-actions {
             display: flex;
             gap: 8px;
         }
@@ -433,14 +449,144 @@
             letter-spacing: 0.5px;
         }
 
-        .role-badge.admin {
+        .role-badge.eigenaar {
+            background: rgba(255, 215, 0, 0.1);
+            color: #ffd700;
+        }
+
+        .role-badge.staff-coordinatie {
             background: rgba(218, 54, 51, 0.1);
             color: var(--accent-critical);
         }
 
-        .role-badge.viewer {
+        .role-badge.staff {
             background: rgba(88, 166, 255, 0.1);
             color: var(--accent-primary);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-badge.actief {
+            background: rgba(35, 134, 54, 0.1);
+            color: var(--accent-success);
+        }
+
+        .status-badge.afgemeld {
+            background: rgba(218, 54, 51, 0.1);
+            color: var(--accent-danger);
+        }
+
+        .announcement-item {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .announcement-item.urgent {
+            border-color: var(--accent-critical);
+            background: rgba(248, 81, 73, 0.05);
+        }
+
+        .announcement-item.warning {
+            border-color: var(--accent-warning);
+            background: rgba(210, 153, 34, 0.05);
+        }
+
+        .announcement-item.info {
+            border-color: var(--accent-primary);
+            background: rgba(88, 166, 255, 0.05);
+        }
+
+        .announcement-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .announcement-title {
+            font-weight: 600;
+            margin: 0;
+            color: var(--text-primary);
+        }
+
+        .announcement-priority {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .announcement-priority.urgent {
+            background: var(--accent-critical);
+            color: white;
+        }
+
+        .announcement-priority.warning {
+            background: var(--accent-warning);
+            color: white;
+        }
+
+        .announcement-priority.info {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        .announcement-content {
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .announcement-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .announcement-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 16px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
         }
 
         .theme-toggle {
@@ -496,24 +642,6 @@
             font-size: 0.9rem;
         }
 
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .screen {
-            display: none;
-        }
-
-        .screen.active {
-            display: block;
-        }
-
         @media (max-width: 768px) {
             .topbar {
                 padding: 12px 16px;
@@ -525,8 +653,9 @@
                 padding: 16px;
             }
 
-            .form-grid {
+            .form-grid, .form-row {
                 grid-template-columns: 1fr;
+                flex-direction: column;
             }
 
             .stats-grid {
@@ -537,6 +666,15 @@
                 width: 100%;
                 justify-content: space-between;
             }
+
+            .staff-table {
+                font-size: 0.85rem;
+            }
+
+            .staff-table th,
+            .staff-table td {
+                padding: 8px;
+            }
         }
     </style>
 </head>
@@ -546,13 +684,13 @@
         <div class="login-container">
             <div class="login-box">
                 <div class="login-header">
-                    <h1>🔐 Security Dashboard</h1>
-                    <p>Toegang alleen voor geautoriseerd personeel</p>
+                    <h1>HDRP Staff Panel</h1>
+                    <p>Hoofddorp Roleplay - Staff Management</p>
                 </div>
                 <div id="loginMessage" class="message"></div>
                 <form id="loginForm">
                     <div class="form-group">
-                        <label class="form-label">Email Adres</label>
+                        <label class="form-label">Gebruikersnaam</label>
                         <input type="text" id="loginEmail" class="form-input" required autocomplete="username">
                     </div>
                     <div class="form-group">
@@ -571,11 +709,11 @@
     <div id="dashboardScreen" class="screen">
         <!-- Topbar -->
         <div class="topbar">
-            <div class="topbar-brand">Security Monitoring System</div>
+            <div class="topbar-brand">HDRP Staff Panel</div>
             <div class="nav-tabs">
-                <button class="nav-tab active" data-tab="dashboard">📊 Dashboard</button>
-                <button class="nav-tab hidden" id="usersTabBtn" data-tab="users">👥 Gebruikers</button>
-                <button class="nav-tab" data-tab="settings">⚙️ Instellingen</button>
+                <button class="nav-tab active" data-tab="dashboard">Dashboard</button>
+                <button class="nav-tab hidden" id="staffTabBtn" data-tab="staff">Staff Beheer</button>
+                <button class="nav-tab" data-tab="settings">Instellingen</button>
             </div>
             <div class="topbar-actions">
                 <div class="user-menu">
@@ -584,7 +722,7 @@
                         <span>▼</span>
                     </button>
                     <div id="userDropdown" class="user-dropdown">
-                        <a href="#" class="dropdown-item danger" id="logoutButton">🚪 Uitloggen</a>
+                        <a href="#" class="dropdown-item danger" id="logoutButton">Uitloggen</a>
                     </div>
                 </div>
             </div>
@@ -594,93 +732,207 @@
         <div id="dashboardTab" class="main-content active">
             <div class="container">
                 <div class="page-header">
-                    <h1>Security Dashboard</h1>
-                    <p>Real-time monitoring van verdachte activiteiten</p>
+                    <h1>HDRP Staff Dashboard</h1>
+                    <p>Hoofddorp Roleplay - Staff Management Overzicht</p>
                 </div>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon">🚨</div>
-                        <div class="stat-number">3</div>
-                        <div class="stat-label">Critical Incidents</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">⚡</div>
-                        <div class="stat-number">7</div>
-                        <div class="stat-label">Suspicious Activity</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">📊</div>
-                        <div class="stat-number">2</div>
-                        <div class="stat-label">Financial Anomalies</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">🔒</div>
-                        <div class="stat-number">1</div>
-                        <div class="stat-label">High-Risk Entries</div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">Recent Security Events</h2>
-                    </div>
-                    <p>Hier komen de real-time security logs...</p>
-                </div>
-            </div>
-        </div>
 
-        <!-- User Management Tab -->
-        <div id="usersTab" class="main-content">
-            <div class="container">
-                <div class="page-header">
-                    <h1>Gebruikersbeheer</h1>
-                    <p>Beheer toegang en permissies van gebruikers</p>
-                </div>
-                <div class="card">
+                <!-- Announcements Section (Only for Staff Coördinatie and above) -->
+                <div class="card hidden" id="announcementManagement">
                     <div class="card-header">
-                        <h2 class="card-title">Nieuwe Gebruiker Toevoegen</h2>
+                        <h2 class="card-title">Mededelingen Beheren</h2>
                     </div>
-                    <div id="addUserMessage" class="message"></div>
-                    <form id="addUserForm">
-                        <div class="form-grid">
+                    <div id="announcementMessage" class="message"></div>
+                    <form id="announcementForm">
+                        <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label">Email/Gebruikersnaam</label>
-                                <input type="text" id="addUserEmail" class="form-input" required>
+                                <label class="form-label">Titel</label>
+                                <input type="text" id="announcementTitle" class="form-input" required>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Rol</label>
-                                <select id="addUserRole" class="form-select" required>
-                                    <option value="">Selecteer rol</option>
-                                    <option value="viewer">Kijker</option>
-                                    <option value="admin">Administrator</option>
+                                <label class="form-label">Prioriteit</label>
+                                <select id="announcementPriority" class="form-select" required>
+                                    <option value="info">Informatie</option>
+                                    <option value="warning">Waarschuwing</option>
+                                    <option value="urgent">Urgent</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Tijdelijk Wachtwoord</label>
-                            <input type="password" id="addUserPassword" class="form-input" required>
+                            <label class="form-label">Bericht</label>
+                            <textarea id="announcementContent" class="form-textarea" required placeholder="Typ hier je mededeling..."></textarea>
                         </div>
-                        <button type="submit" class="btn btn-success">
-                            👤 Gebruiker Toevoegen
+                        <button type="submit" class="btn btn-success">Mededeling Plaatsen</button>
+                    </form>
+                </div>
+
+                <!-- Announcements Display -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Mededelingen</h2>
+                        <span id="announcementCount">0 mededelingen</span>
+                    </div>
+                    <div id="announcementsList">
+                        <!-- Announcements will be loaded here -->
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalStaff">0</div>
+                        <div class="stat-label">Totaal Staff</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="activeStaff">0</div>
+                        <div class="stat-label">Actieve Staff</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="inactiveStaff">0</div>
+                        <div class="stat-label">Afgemelde Staff</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="warningsCount">0</div>
+                        <div class="stat-label">Totaal Waarschuwingen</div>
+                    </div>
+                </div>
+
+                <!-- Staff Overview -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Staff Overzicht</h2>
+                        <span id="staffOverviewCount">0 staff leden</span>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table class="staff-table">
+                            <thead>
+                                <tr>
+                                    <th>Echte Naam</th>
+                                    <th>Discord Naam</th>
+                                    <th>Roblox Naam</th>
+                                    <th>Rang</th>
+                                    <th>Status</th>
+                                    <th>Aangenomen</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dashboardStaffTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Staff Management Tab -->
+        <div id="staffTab" class="main-content">
+            <div class="container">
+                <div class="page-header">
+                    <h1>Staff Beheer</h1>
+                    <p>Beheer alle HDRP staff leden en hun informatie</p>
+                </div>
+                
+                <!-- Add/Edit Staff Card (Only for Eigenaar) -->
+                <div class="card hidden" id="addStaffCard">
+                    <div class="card-header">
+                        <h2 class="card-title" id="staffFormTitle">Nieuw Staff Lid Toevoegen</h2>
+                    </div>
+                    <div id="staffMessage" class="message"></div>
+                    <form id="staffForm">
+                        <input type="hidden" id="editingStaffIndex" value="">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Echte Naam *</label>
+                                <input type="text" id="realName" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Discord Naam *</label>
+                                <input type="text" id="discordName" class="form-input" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Discord ID *</label>
+                                <input type="text" id="discordId" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Roblox Naam *</label>
+                                <input type="text" id="robloxName" class="form-input" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Rang *</label>
+                                <select id="staffRole" class="form-select" required>
+                                    <option value="">Selecteer rang</option>
+                                    <option value="staff">Staff</option>
+                                    <option value="staff-coordinatie">Staff Coördinatie</option>
+                                    <option value="eigenaar" id="eigenaarOption" class="hidden">Eigenaar</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Datum Aangenomen *</label>
+                                <input type="date" id="dateHired" class="form-input" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Laatste Promotie</label>
+                                <input type="date" id="lastPromotion" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Status *</label>
+                                <select id="staffStatus" class="form-select" required>
+                                    <option value="actief">Actief</option>
+                                    <option value="afgemeld">Afgemeld</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Normale Waarschuwingen</label>
+                                <input type="number" id="normalWarnings" class="form-input" min="0" value="0">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Laatste Wijziging Door</label>
+                                <input type="text" id="lastModifiedBy" class="form-input" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Overige Opmerkingen</label>
+                            <textarea id="comments" class="form-textarea" placeholder="Extra opmerkingen of notities..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success" id="staffSubmitBtn">
+                            Staff Lid Toevoegen
+                        </button>
+                        <button type="button" class="btn btn-danger" id="cancelEditBtn" style="display: none; margin-left: 10px;">
+                            Annuleren
                         </button>
                     </form>
                 </div>
+
+                <!-- Staff List -->
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title">Bestaande Gebruikers</h2>
-                        <span id="userCount">0 gebruikers</span>
+                        <h2 class="card-title">Staff Leden</h2>
+                        <span id="staffCount">0 staff leden</span>
                     </div>
-                    <table class="user-table">
-                        <thead>
-                            <tr>
-                                <th>Email/Gebruiker</th>
-                                <th>Rol</th>
-                                <th>Laatst Actief</th>
-                                <th>Acties</th>
-                            </tr>
-                        </thead>
-                        <tbody id="userTableBody">
-                        </tbody>
-                    </table>
+                    <div style="overflow-x: auto;">
+                        <table class="staff-table">
+                            <thead>
+                                <tr>
+                                    <th>Echte Naam</th>
+                                    <th>Discord Naam</th>
+                                    <th>Discord ID</th>
+                                    <th>Roblox Naam</th>
+                                    <th>Rang</th>
+                                    <th>Aangenomen</th>
+                                    <th>Status</th>
+                                    <th>Waarschuwingen</th>
+                                    <th class="hidden" id="actionsColumn">Acties</th>
+                                </tr>
+                            </thead>
+                            <tbody id="staffTableBody">
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -714,7 +966,7 @@
                             <label class="form-label">Huidig Wachtwoord</label>
                             <input type="password" id="currentPasswordInput" class="form-input" required autocomplete="current-password">
                         </div>
-                        <div class="form-grid">
+                        <div class="form-row">
                             <div class="form-group">
                                 <label class="form-label">Nieuw Wachtwoord</label>
                                 <input type="password" id="newPasswordInput" class="form-input" required autocomplete="new-password">
@@ -725,7 +977,7 @@
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary">
-                            🔑 Wachtwoord Wijzigen
+                            Wachtwoord Wijzigen
                         </button>
                     </form>
                 </div>
@@ -738,83 +990,80 @@
         const App = {
             data: {
                 users: [
-                    { email: 'mees', password: 'mees', role: 'admin', lastActive: new Date().toISOString() },
-                    { email: 'demo', password: 'demo', role: 'viewer', lastActive: new Date().toISOString() }
+                    { email: 'eigenaar', password: 'eigenaar123', role: 'eigenaar', lastActive: new Date().toISOString() },
+                    { email: 'coordinator', password: 'coord123', role: 'staff-coordinatie', lastActive: new Date().toISOString() },
+                    { email: 'staff1', password: 'staff123', role: 'staff', lastActive: new Date().toISOString() }
+                ],
+                staffMembers: [
+                    {
+                        realName: 'John Doe',
+                        discordName: 'EigenaarExample#1234',
+                        discordId: '123456789012345678',
+                        robloxName: 'EigenaarRoblox',
+                        role: 'eigenaar',
+                        dateHired: '2024-01-01',
+                        lastPromotion: '2024-01-01',
+                        lastModified: new Date().toISOString(),
+                        lastModifiedBy: 'System',
+                        status: 'actief',
+                        inactivityWarnings: 0,
+                        normalWarnings: 0,
+                        comments: 'Oprichter van HDRP'
+                    }
+                ],
+                announcements: [
+                    {
+                        id: 1,
+                        title: 'Welkom bij HDRP Staff Panel',
+                        content: 'Dit is het nieuwe staff management systeem voor Hoofddorp Roleplay.',
+                        author: 'System',
+                        date: new Date().toISOString(),
+                        priority: 'info'
+                    }
                 ],
                 currentUser: null,
                 isDarkMode: true
             },
 
-            // Storage methods
+            // Storage methods (in-memory for artifacts)
             storage: {
                 save() {
-                    try {
-                        localStorage.setItem('securityAppData', JSON.stringify(App.data));
-                        console.log('Data succesvol opgeslagen in localStorage:', JSON.stringify(App.data, null, 2));
-                    } catch (e) {
-                        console.warn('Kon niet opslaan in localStorage:', e);
-                    }
+                    console.log('Data opgeslagen in geheugen (localStorage niet beschikbaar in artifacts)');
                 },
                 load() {
-                    try {
-                        const saved = localStorage.getItem('securityAppData');
-                        if (saved) {
-                            const data = JSON.parse(saved);
-                            App.data.users = data.users || App.data.users;
-                            App.data.isDarkMode = data.isDarkMode !== undefined ? data.isDarkMode : true;
-                            if (data.currentUser) {
-                                App.data.currentUser = data.currentUser;
-                                App.ui.showDashboard();
-                            }
-                            console.log('Data succesvol geladen uit localStorage:', JSON.stringify(App.data, null, 2));
-                        } else {
-                            console.log('Geen opgeslagen data gevonden, gebruik default data');
-                        }
-                    } catch (e) {
-                        console.warn('Kon niet laden uit localStorage:', e);
-                    }
+                    console.log('Data geladen uit standaard configuratie');
                 }
             },
 
             // UI methods
             ui: {
                 showMessage(elementId, message, type = 'error', duration = 5000) {
-                    console.log(`=== SHOWING MESSAGE ===`);
-                    console.log('Element ID:', elementId, 'Message:', message, 'Type:', type);
-                    
                     const element = document.getElementById(elementId);
-                    if (!element) {
-                        console.error('Message element not found:', elementId);
-                        return;
-                    }
+                    if (!element) return;
                     
                     element.className = `message ${type}`;
                     element.textContent = message;
                     element.style.display = 'block';
                     
-                    console.log('Message displayed successfully');
-                    
                     setTimeout(() => {
                         element.style.display = 'none';
-                        console.log('Message hidden after', duration, 'ms');
                     }, duration);
                 },
 
                 showLogin() {
-                    console.log('=== SHOWING LOGIN SCREEN ===');
                     document.getElementById('loginScreen').classList.add('active');
                     document.getElementById('dashboardScreen').classList.remove('active');
                     document.getElementById('loginForm').reset();
-                    console.log('Login screen displayed');
                 },
 
                 showDashboard() {
-                    console.log('=== SHOWING DASHBOARD ===');
                     document.getElementById('loginScreen').classList.remove('active');
                     document.getElementById('dashboardScreen').classList.add('active');
                     App.ui.updateUserDisplay();
                     App.ui.showTab('dashboard');
-                    console.log('Dashboard displayed for user:', App.data.currentUser);
+                    App.ui.updateStats();
+                    App.ui.refreshDashboardStaffTable();
+                    App.ui.refreshAnnouncements();
                 },
 
                 showTab(tabName) {
@@ -838,49 +1087,92 @@
                         activeBtn.classList.add('active');
                     }
 
-                    // Load data for users tab
-                    if (tabName === 'users') {
-                        App.ui.refreshUserTable();
+                    // Load data for staff tab
+                    if (tabName === 'staff') {
+                        App.ui.refreshStaffTable();
                     }
                 },
 
                 updateUserDisplay() {
                     const userNameEl = document.getElementById('currentUserName');
-                    const usersTabBtn = document.getElementById('usersTabBtn');
+                    const staffTabBtn = document.getElementById('staffTabBtn');
+                    const addStaffCard = document.getElementById('addStaffCard');
+                    const actionsColumn = document.getElementById('actionsColumn');
+                    const eigenaarOption = document.getElementById('eigenaarOption');
+                    const announcementManagement = document.getElementById('announcementManagement');
                     
                     if (App.data.currentUser) {
                         userNameEl.textContent = App.data.currentUser.email;
                         
-                        // Show users tab only for admins
-                        if (App.data.currentUser.role === 'admin') {
-                            usersTabBtn.classList.remove('hidden');
+                        // Show staff tab for eigenaar and staff-coordinatie
+                        if (App.data.currentUser.role === 'eigenaar' || App.data.currentUser.role === 'staff-coordinatie') {
+                            staffTabBtn.classList.remove('hidden');
                         } else {
-                            usersTabBtn.classList.add('hidden');
+                            staffTabBtn.classList.add('hidden');
+                        }
+
+                        // Show add staff card only for eigenaar
+                        if (App.data.currentUser.role === 'eigenaar') {
+                            addStaffCard.classList.remove('hidden');
+                            actionsColumn.classList.remove('hidden');
+                            eigenaarOption.classList.remove('hidden');
+                        } else {
+                            addStaffCard.classList.add('hidden');
+                            actionsColumn.classList.add('hidden');
+                            eigenaarOption.classList.add('hidden');
+                        }
+
+                        // Show announcement management for staff-coordinatie and eigenaar
+                        if (App.data.currentUser.role === 'eigenaar' || App.data.currentUser.role === 'staff-coordinatie') {
+                            announcementManagement.classList.remove('hidden');
+                        } else {
+                            announcementManagement.classList.add('hidden');
                         }
                     }
                 },
 
-                refreshUserTable() {
-                    const tbody = document.getElementById('userTableBody');
-                    const countEl = document.getElementById('userCount');
+                updateStats() {
+                    const totalStaff = App.data.staffMembers.length;
+                    const activeStaff = App.data.staffMembers.filter(s => s.status === 'actief').length;
+                    const inactiveStaff = App.data.staffMembers.filter(s => s.status === 'afgemeld').length;
+                    const warningsCount = App.data.staffMembers.reduce((sum, s) => sum + s.inactivityWarnings + s.normalWarnings, 0);
+
+                    document.getElementById('totalStaff').textContent = totalStaff;
+                    document.getElementById('activeStaff').textContent = activeStaff;
+                    document.getElementById('inactiveStaff').textContent = inactiveStaff;
+                    document.getElementById('warningsCount').textContent = warningsCount;
+                },
+
+                refreshStaffTable() {
+                    const tbody = document.getElementById('staffTableBody');
+                    const countEl = document.getElementById('staffCount');
                     
                     if (!tbody || !countEl) return;
                     
                     tbody.innerHTML = '';
-                    countEl.textContent = `${App.data.users.length} gebruiker${App.data.users.length !== 1 ? 's' : ''}`;
+                    countEl.textContent = `${App.data.staffMembers.length} staff ${App.data.staffMembers.length !== 1 ? 'leden' : 'lid'}`;
                     
-                    App.data.users.forEach((user, index) => {
+                    App.data.staffMembers.forEach((staff, index) => {
                         const row = document.createElement('tr');
-                        const lastActive = new Date(user.lastActive).toLocaleString('nl-NL');
-                        const isCurrentUser = App.data.currentUser && App.data.currentUser.email === user.email;
+                        const dateHired = new Date(staff.dateHired).toLocaleDateString('nl-NL');
+                        const totalWarnings = staff.inactivityWarnings + staff.normalWarnings;
+                        const canEdit = App.data.currentUser && (App.data.currentUser.role === 'eigenaar' || 
+                                       (App.data.currentUser.role === 'staff-coordinatie' && staff.role !== 'eigenaar'));
                         
                         row.innerHTML = `
-                            <td>${user.email}</td>
-                            <td><span class="role-badge ${user.role}">${user.role === 'admin' ? 'Administrator' : 'Kijker'}</span></td>
-                            <td>${lastActive}</td>
-                            <td>
-                                <div class="user-actions">
-                                    ${!isCurrentUser ? `<button class="btn btn-danger btn-small delete-user-btn" data-user-index="${index}">Verwijder</button>` : '<em>Huidige gebruiker</em>'}
+                            <td>${staff.discordName}</td>
+                            <td>${staff.discordId}</td>
+                            <td>${staff.robloxName}</td>
+                            <td><span class="role-badge ${staff.role}">${App.ui.getRoleDisplayName(staff.role)}</span></td>
+                            <td>${dateHired}</td>
+                            <td><span class="status-badge ${staff.status}">${staff.status === 'actief' ? 'Actief' : 'Afgemeld'}</span></td>
+                            <td>${totalWarnings} (${staff.inactivityWarnings}I/${staff.normalWarnings}N)</td>
+                            <td class="hidden" id="actionsCell">
+                                <div class="staff-actions">
+                                    ${canEdit ? `
+                                        <button class="btn btn-primary btn-small edit-staff-btn" data-staff-index="${index}">Bewerken</button>
+                                        ${App.data.currentUser.role === 'eigenaar' ? `<button class="btn btn-danger btn-small delete-staff-btn" data-staff-index="${index}">Verwijderen</button>` : ''}
+                                    ` : '<em>Geen toegang</em>'}
                                 </div>
                             </td>
                         `;
@@ -888,14 +1180,34 @@
                         tbody.appendChild(row);
                     });
 
-                    // Add event listeners to all delete buttons
-                    document.querySelectorAll('.delete-user-btn').forEach(button => {
+                    // Show actions column if user has permissions
+                    if (App.data.currentUser && (App.data.currentUser.role === 'eigenaar' || App.data.currentUser.role === 'staff-coordinatie')) {
+                        document.querySelectorAll('#actionsCell').forEach(cell => cell.classList.remove('hidden'));
+                    }
+
+                    // Add event listeners
+                    document.querySelectorAll('.edit-staff-btn').forEach(button => {
                         button.addEventListener('click', function() {
-                            const userIndex = parseInt(this.getAttribute('data-user-index'));
-                            console.log('Delete button clicked for user index:', userIndex);
-                            App.auth.removeUser(userIndex);
+                            const staffIndex = parseInt(this.getAttribute('data-staff-index'));
+                            App.staff.editStaff(staffIndex);
                         });
                     });
+
+                    document.querySelectorAll('.delete-staff-btn').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const staffIndex = parseInt(this.getAttribute('data-staff-index'));
+                            App.staff.deleteStaff(staffIndex);
+                        });
+                    });
+                },
+
+                getRoleDisplayName(role) {
+                    switch(role) {
+                        case 'eigenaar': return 'Eigenaar';
+                        case 'staff-coordinatie': return 'Staff Coördinatie';
+                        case 'staff': return 'Staff';
+                        default: return role;
+                    }
                 },
 
                 toggleTheme() {
@@ -916,35 +1228,126 @@
                 toggleUserMenu() {
                     const dropdown = document.getElementById('userDropdown');
                     dropdown.classList.toggle('show');
+                },
+
+                clearStaffForm() {
+                    document.getElementById('staffForm').reset();
+                    document.getElementById('editingStaffIndex').value = '';
+                    document.getElementById('staffFormTitle').textContent = 'Nieuw Staff Lid Toevoegen';
+                    document.getElementById('staffSubmitBtn').textContent = 'Staff Lid Toevoegen';
+                    document.getElementById('cancelEditBtn').style.display = 'none';
+                    document.getElementById('lastModifiedBy').value = '';
+                },
+
+                refreshDashboardStaffTable() {
+                    const tbody = document.getElementById('dashboardStaffTableBody');
+                    const countEl = document.getElementById('staffOverviewCount');
+                    
+                    if (!tbody || !countEl) return;
+                    
+                    tbody.innerHTML = '';
+                    countEl.textContent = `${App.data.staffMembers.length} staff ${App.data.staffMembers.length !== 1 ? 'leden' : 'lid'}`;
+                    
+                    App.data.staffMembers.forEach((staff) => {
+                        const row = document.createElement('tr');
+                        const dateHired = new Date(staff.dateHired).toLocaleDateString('nl-NL');
+                        
+                        row.innerHTML = `
+                            <td>${staff.realName || 'Niet ingesteld'}</td>
+                            <td>${staff.discordName}</td>
+                            <td>${staff.robloxName}</td>
+                            <td><span class="role-badge ${staff.role}">${App.ui.getRoleDisplayName(staff.role)}</span></td>
+                            <td><span class="status-badge ${staff.status}">${staff.status === 'actief' ? 'Actief' : 'Afgemeld'}</span></td>
+                            <td>${dateHired}</td>
+                        `;
+                        
+                        tbody.appendChild(row);
+                    });
+                },
+
+                refreshAnnouncements() {
+                    const container = document.getElementById('announcementsList');
+                    const countEl = document.getElementById('announcementCount');
+                    
+                    if (!container || !countEl) return;
+                    
+                    container.innerHTML = '';
+                    countEl.textContent = `${App.data.announcements.length} mededelingen`;
+                    
+                    if (App.data.announcements.length === 0) {
+                        container.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 20px;">Geen mededelingen beschikbaar.</p>';
+                        return;
+                    }
+                    
+                    // Sort announcements by date (newest first)
+                    const sortedAnnouncements = [...App.data.announcements].sort((a, b) => new Date(b.date) - new Date(a.date));
+                    
+                    sortedAnnouncements.forEach((announcement) => {
+                        const date = new Date(announcement.date).toLocaleString('nl-NL');
+                        const canDelete = App.data.currentUser && (App.data.currentUser.role === 'eigenaar' || App.data.currentUser.role === 'staff-coordinatie');
+                        
+                        const announcementEl = document.createElement('div');
+                        announcementEl.className = `announcement-item ${announcement.priority}`;
+                        announcementEl.innerHTML = `
+                            <div class="announcement-header">
+                                <h4 class="announcement-title">${announcement.title}</h4>
+                                <div style="display: flex; gap: 8px; align-items: center;">
+                                    <span class="announcement-priority ${announcement.priority}">${App.ui.getPriorityDisplayName(announcement.priority)}</span>
+                                    ${canDelete ? `<button class="btn btn-danger btn-small delete-announcement-btn" data-announcement-id="${announcement.id}" style="padding: 4px 8px;">×</button>` : ''}
+                                </div>
+                            </div>
+                            <div class="announcement-content">${announcement.content}</div>
+                            <div class="announcement-meta">
+                                <span>Door: ${announcement.author}</span>
+                                <span>${date}</span>
+                            </div>
+                        `;
+                        
+                        container.appendChild(announcementEl);
+                    });
+
+                    // Add delete event listeners
+                    document.querySelectorAll('.delete-announcement-btn').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const announcementId = parseInt(this.getAttribute('data-announcement-id'));
+                            App.announcements.deleteAnnouncement(announcementId);
+                        });
+                    });
+                },
+
+                getPriorityDisplayName(priority) {
+                    switch(priority) {
+                        case 'urgent': return 'Urgent';
+                        case 'warning': return 'Waarschuwing';
+                        case 'info': return 'Info';
+                        default: return priority;
+                    }
                 }
             },
 
             // Authentication methods
             auth: {
                 login(email, password) {
-                    console.log('=== LOGIN FUNCTION CALLED ===');
-                    console.log('Input email:', JSON.stringify(email));
-                    console.log('Input password:', JSON.stringify(password));
-                    console.log('Available users:', JSON.stringify(App.data.users, null, 2));
+                    console.log('Login attempt:', { email, password });
+                    console.log('Available users:', App.data.users);
                     
                     const user = App.data.users.find(u => {
-                        console.log(`Checking user: email="${u.email}" password="${u.password}"`);
-                        console.log(`Match check: email=${u.email === email} password=${u.password === password}`);
+                        console.log('Checking user:', u.email, 'against input:', email);
                         return u.email === email && u.password === password;
                     });
                     
-                    console.log('Found user:', user ? JSON.stringify(user, null, 2) : 'null');
+                    console.log('Found user:', user);
                     
                     if (user) {
-                        console.log('LOGIN SUCCESS - redirecting to dashboard');
                         user.lastActive = new Date().toISOString();
                         App.data.currentUser = { ...user };
                         App.storage.save();
                         App.ui.showDashboard();
+                        console.log('Login successful, showing dashboard');
                         return true;
                     } else {
-                        console.log('LOGIN FAILED - showing error message');
-                        App.ui.showMessage('loginMessage', 'Ongeldig email adres of wachtwoord');
+                        console.log('Login failed');
+                        App.ui.showMessage('loginMessage', 'Ongeldige gebruikersnaam of wachtwoord');
                         return false;
                     }
                 },
@@ -956,64 +1359,9 @@
                     document.getElementById('userDropdown').classList.remove('show');
                 },
 
-                addUser(email, password, role) {
-                    // Validation
-                    if (!email || !password || !role) {
-                        App.ui.showMessage('addUserMessage', 'Alle velden zijn verplicht');
-                        return false;
-                    }
-                    
-                    if (App.data.users.find(u => u.email === email)) {
-                        App.ui.showMessage('addUserMessage', 'Gebruiker met dit email bestaat al');
-                        return false;
-                    }
-                    
-                    if (password.length < 3) {
-                        App.ui.showMessage('addUserMessage', 'Wachtwoord moet minimaal 3 karakters lang zijn');
-                        return false;
-                    }
-
-                    // Add user
-                    App.data.users.push({
-                        email: email,
-                        password: password,
-                        role: role,
-                        lastActive: new Date().toISOString()
-                    });
-
-                    App.storage.save();
-                    App.ui.refreshUserTable();
-                    App.ui.showMessage('addUserMessage', `Gebruiker ${email} succesvol toegevoegd`, 'success');
-                    document.getElementById('addUserForm').reset();
-                    return true;
-                },
-
-                removeUser(index) {
-                    console.log('=== REMOVE USER FUNCTION CALLED ===');
-                    console.log('User index to remove:', index);
-                    console.log('Total users:', App.data.users.length);
-                    
-                    if (index < 0 || index >= App.data.users.length) {
-                        console.log('Invalid index, aborting');
-                        return;
-                    }
-                    
-                    const user = App.data.users[index];
-                    console.log('User to remove:', JSON.stringify(user, null, 2));
-                    
-                    // Skip confirm for now and directly remove
-                    console.log('Removing user directly (no confirm dialog)');
-                    App.data.users.splice(index, 1);
-                    App.storage.save();
-                    App.ui.refreshUserTable();
-                    App.ui.showMessage('addUserMessage', `Gebruiker ${user.email} verwijderd`, 'success');
-                    console.log('User removed successfully');
-                },
-
                 changePassword(currentPassword, newPassword, confirmPassword) {
                     if (!App.data.currentUser) return false;
 
-                    // Validation
                     if (currentPassword !== App.data.currentUser.password) {
                         App.ui.showMessage('passwordMessage', 'Huidig wachtwoord is incorrect');
                         return false;
@@ -1024,12 +1372,11 @@
                         return false;
                     }
 
-                    if (newPassword.length < 3) {
-                        App.ui.showMessage('passwordMessage', 'Wachtwoord moet minimaal 3 karakters lang zijn');
+                    if (newPassword.length < 6) {
+                        App.ui.showMessage('passwordMessage', 'Wachtwoord moet minimaal 6 karakters lang zijn');
                         return false;
                     }
 
-                    // Update password
                     App.data.currentUser.password = newPassword;
                     const userIndex = App.data.users.findIndex(u => u.email === App.data.currentUser.email);
                     if (userIndex !== -1) {
@@ -1043,123 +1390,255 @@
                 }
             },
 
+            // Staff management methods
+            staff: {
+                addStaff(staffData) {
+                    // Validation
+                    if (!staffData.discordName || !staffData.discordId || !staffData.robloxName || !staffData.role || !staffData.dateHired) {
+                        App.ui.showMessage('staffMessage', 'Alle verplichte velden moeten worden ingevuld');
+                        return false;
+                    }
+
+                    // Check if Discord ID already exists
+                    if (App.data.staffMembers.find(s => s.discordId === staffData.discordId)) {
+                        App.ui.showMessage('staffMessage', 'Er bestaat al een staff lid met dit Discord ID');
+                        return false;
+                    }
+
+                    // Check permissions for eigenaar role
+                    if (staffData.role === 'eigenaar' && App.data.currentUser.role !== 'eigenaar') {
+                        App.ui.showMessage('staffMessage', 'Alleen eigenaren kunnen andere eigenaren aanstellen');
+                        return false;
+                    }
+
+                    // Add staff member
+                    const newStaff = {
+                        ...staffData,
+                        lastModified: new Date().toISOString(),
+                        lastModifiedBy: App.data.currentUser.email,
+                        inactivityWarnings: parseInt(staffData.inactivityWarnings) || 0,
+                        normalWarnings: parseInt(staffData.normalWarnings) || 0
+                    };
+
+                    App.data.staffMembers.push(newStaff);
+                    App.storage.save();
+                    App.ui.refreshStaffTable();
+                    App.ui.updateStats();
+                    App.ui.showMessage('staffMessage', `${staffData.discordName} succesvol toegevoegd als ${App.ui.getRoleDisplayName(staffData.role)}`, 'success');
+                    App.ui.clearStaffForm();
+                    return true;
+                },
+
+                editStaff(index) {
+                    const staff = App.data.staffMembers[index];
+                    if (!staff) return;
+
+                    // Check permissions
+                    if (App.data.currentUser.role === 'staff-coordinatie' && staff.role === 'eigenaar') {
+                        App.ui.showMessage('staffMessage', 'Je hebt geen toestemming om eigenaren te bewerken');
+                        return;
+                    }
+
+                    // Fill form with staff data
+                    document.getElementById('editingStaffIndex').value = index;
+                    document.getElementById('discordName').value = staff.discordName;
+                    document.getElementById('discordId').value = staff.discordId;
+                    document.getElementById('robloxName').value = staff.robloxName;
+                    document.getElementById('staffRole').value = staff.role;
+                    document.getElementById('dateHired').value = staff.dateHired;
+                    document.getElementById('lastPromotion').value = staff.lastPromotion || '';
+                    document.getElementById('staffStatus').value = staff.status;
+                    document.getElementById('inactivityWarnings').value = staff.inactivityWarnings;
+                    document.getElementById('normalWarnings').value = staff.normalWarnings;
+                    document.getElementById('comments').value = staff.comments || '';
+                    document.getElementById('lastModifiedBy').value = staff.lastModifiedBy;
+
+                    document.getElementById('staffFormTitle').textContent = `${staff.discordName} bewerken`;
+                    document.getElementById('staffSubmitBtn').textContent = 'Wijzigingen Opslaan';
+                    document.getElementById('cancelEditBtn').style.display = 'inline-flex';
+
+                    // Scroll to form
+                    document.getElementById('addStaffCard').scrollIntoView({ behavior: 'smooth' });
+                },
+
+                updateStaff(index, staffData) {
+                    const staff = App.data.staffMembers[index];
+                    if (!staff) return false;
+
+                    // Check permissions
+                    if (App.data.currentUser.role === 'staff-coordinatie' && staff.role === 'eigenaar') {
+                        App.ui.showMessage('staffMessage', 'Je hebt geen toestemming om eigenaren te bewerken');
+                        return false;
+                    }
+
+                    // Validation
+                    if (!staffData.discordName || !staffData.discordId || !staffData.robloxName || !staffData.role || !staffData.dateHired) {
+                        App.ui.showMessage('staffMessage', 'Alle verplichte velden moeten worden ingevuld');
+                        return false;
+                    }
+
+                    // Check if Discord ID already exists (excluding current staff)
+                    const existingStaff = App.data.staffMembers.find(s => s.discordId === staffData.discordId);
+                    if (existingStaff && App.data.staffMembers.indexOf(existingStaff) !== index) {
+                        App.ui.showMessage('staffMessage', 'Er bestaat al een staff lid met dit Discord ID');
+                        return false;
+                    }
+
+                    // Check permissions for eigenaar role
+                    if (staffData.role === 'eigenaar' && App.data.currentUser.role !== 'eigenaar') {
+                        App.ui.showMessage('staffMessage', 'Alleen eigenaren kunnen eigenaar rollen toewijzen');
+                        return false;
+                    }
+
+                    // Update staff member
+                    App.data.staffMembers[index] = {
+                        ...staffData,
+                        lastModified: new Date().toISOString(),
+                        lastModifiedBy: App.data.currentUser.email,
+                        inactivityWarnings: parseInt(staffData.inactivityWarnings) || 0,
+                        normalWarnings: parseInt(staffData.normalWarnings) || 0
+                    };
+
+                    App.storage.save();
+                    App.ui.refreshStaffTable();
+                    App.ui.updateStats();
+                    App.ui.showMessage('staffMessage', `${staffData.discordName} succesvol bijgewerkt`, 'success');
+                    App.ui.clearStaffForm();
+                    return true;
+                },
+
+                deleteStaff(index) {
+                    const staff = App.data.staffMembers[index];
+                    if (!staff) return;
+
+                    // Check permissions - only eigenaar can delete
+                    if (App.data.currentUser.role !== 'eigenaar') {
+                        App.ui.showMessage('staffMessage', 'Alleen eigenaren kunnen staff leden verwijderen');
+                        return;
+                    }
+
+                    // Prevent deleting yourself if you're eigenaar
+                    if (staff.role === 'eigenaar' && staff.discordName.includes(App.data.currentUser.email)) {
+                        App.ui.showMessage('staffMessage', 'Je kunt jezelf niet verwijderen');
+                        return;
+                    }
+
+                    if (confirm(`Weet je zeker dat je ${staff.discordName} wilt verwijderen?`)) {
+                        App.data.staffMembers.splice(index, 1);
+                        App.storage.save();
+                        App.ui.refreshStaffTable();
+                        App.ui.updateStats();
+                        App.ui.showMessage('staffMessage', `${staff.discordName} is verwijderd`, 'success');
+                    }
+                }
+            },
+
             // Initialize app
             init() {
-                console.log('=== App Initialization Started ===');
-                
                 // Load saved data
                 App.storage.load();
-                console.log('Current app data after load:', JSON.stringify(App.data, null, 2));
 
                 // Set up theme
                 if (!App.data.isDarkMode) {
                     document.body.setAttribute('data-theme', 'light');
                     document.getElementById('themeToggle').classList.add('active');
                 }
-                console.log('Theme setup complete, isDarkMode:', App.data.isDarkMode);
 
-                // Event listeners
-                console.log('Setting up event listeners...');
-                console.log('All elements with ID loginForm:', document.querySelectorAll('#loginForm'));
-                console.log('All forms on page:', document.querySelectorAll('form'));
-                
+                // Login form
+                console.log('Setting up login form...');
                 const loginForm = document.getElementById('loginForm');
-                console.log('Login form element found:', loginForm);
-                console.log('Login form exists:', !!loginForm);
+                console.log('Login form found:', !!loginForm);
                 
                 if (loginForm) {
                     loginForm.addEventListener('submit', function(e) {
-                        console.log('=== LOGIN FORM SUBMITTED ===');
+                        console.log('Login form submitted');
                         e.preventDefault();
                         const email = document.getElementById('loginEmail').value.trim();
                         const password = document.getElementById('loginPassword').value;
-                        console.log('Login attempt:', { email: email, password: password });
-                        console.log('Email length:', email.length, 'Password length:', password.length);
+                        console.log('Form values - email:', email, 'password length:', password.length);
                         App.auth.login(email, password);
                     });
-                    console.log('Login form event listener attached successfully');
                     
-                    // Also add click listener to submit button as backup
-                    const submitButton = loginForm.querySelector('button[type="submit"]');
-                    console.log('Submit button found:', submitButton);
-                    if (submitButton) {
-                        submitButton.addEventListener('click', function(e) {
-                            console.log('=== SUBMIT BUTTON CLICKED ===');
+                    // Also add direct button click handler as backup
+                    const submitBtn = loginForm.querySelector('button[type="submit"]');
+                    if (submitBtn) {
+                        submitBtn.addEventListener('click', function(e) {
+                            console.log('Submit button clicked directly');
                             e.preventDefault();
-                            
-                            // Get form values and login directly
                             const email = document.getElementById('loginEmail').value.trim();
                             const password = document.getElementById('loginPassword').value;
-                            console.log('Direct login attempt:', { email: email, password: password });
+                            console.log('Button click - email:', email, 'password length:', password.length);
                             App.auth.login(email, password);
                         });
                     }
-                } else {
-                    console.error('LOGIN FORM NOT FOUND!');
-                    console.log('Trying to find it manually...');
-                    setTimeout(() => {
-                        const delayedForm = document.getElementById('loginForm');
-                        console.log('Delayed search for loginForm:', delayedForm);
-                    }, 1000);
                 }
 
-                const addUserForm = document.getElementById('addUserForm');
-                console.log('Add user form found:', !!addUserForm);
-                if (addUserForm) {
-                    const addUserButton = addUserForm.querySelector('button[type="submit"]');
-                    if (addUserButton) {
-                        addUserButton.addEventListener('click', function(e) {
-                            console.log('Add user button clicked');
-                            e.preventDefault();
-                            const email = document.getElementById('addUserEmail').value.trim();
-                            const password = document.getElementById('addUserPassword').value;
-                            const role = document.getElementById('addUserRole').value;
-                            App.auth.addUser(email, password, role);
-                        });
-                    }
+                // Staff form
+                const staffForm = document.getElementById('staffForm');
+                if (staffForm) {
+                    staffForm.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        const editingIndex = document.getElementById('editingStaffIndex').value;
+                        
+                        const staffData = {
+                            discordName: document.getElementById('discordName').value.trim(),
+                            discordId: document.getElementById('discordId').value.trim(),
+                            robloxName: document.getElementById('robloxName').value.trim(),
+                            role: document.getElementById('staffRole').value,
+                            dateHired: document.getElementById('dateHired').value,
+                            lastPromotion: document.getElementById('lastPromotion').value,
+                            status: document.getElementById('staffStatus').value,
+                            inactivityWarnings: document.getElementById('inactivityWarnings').value,
+                            normalWarnings: document.getElementById('normalWarnings').value,
+                            comments: document.getElementById('comments').value.trim()
+                        };
+
+                        if (editingIndex) {
+                            App.staff.updateStaff(parseInt(editingIndex), staffData);
+                        } else {
+                            App.staff.addStaff(staffData);
+                        }
+                    });
                 }
 
+                // Cancel edit button
+                document.getElementById('cancelEditBtn').addEventListener('click', function() {
+                    App.ui.clearStaffForm();
+                });
+
+                // Password form
                 const passwordForm = document.getElementById('passwordForm');
-                console.log('Password form found:', !!passwordForm);
                 if (passwordForm) {
-                    const passwordButton = passwordForm.querySelector('button[type="submit"]');
-                    if (passwordButton) {
-                        passwordButton.addEventListener('click', function(e) {
-                            console.log('Password change button clicked');
-                            e.preventDefault();
-                            const current = document.getElementById('currentPasswordInput').value;
-                            const newPass = document.getElementById('newPasswordInput').value;
-                            const confirm = document.getElementById('confirmPasswordInput').value;
-                            App.auth.changePassword(current, newPass, confirm);
-                        });
-                    }
+                    passwordForm.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        const current = document.getElementById('currentPasswordInput').value;
+                        const newPass = document.getElementById('newPasswordInput').value;
+                        const confirm = document.getElementById('confirmPasswordInput').value;
+                        App.auth.changePassword(current, newPass, confirm);
+                    });
                 }
 
                 // Navigation
                 document.querySelectorAll('.nav-tab').forEach(btn => {
                     btn.addEventListener('click', function() {
                         const tab = this.getAttribute('data-tab');
-                        console.log('Tab clicked:', tab);
                         App.ui.showTab(tab);
                     });
                 });
 
                 // User menu
                 document.getElementById('userMenuButton').addEventListener('click', function(e) {
-                    console.log('User menu button clicked');
                     e.stopPropagation();
                     App.ui.toggleUserMenu();
                 });
 
                 document.getElementById('logoutButton').addEventListener('click', function(e) {
-                    console.log('Logout button clicked');
                     e.preventDefault();
                     App.auth.logout();
                 });
 
                 // Theme toggle
                 document.getElementById('themeToggle').addEventListener('click', function() {
-                    console.log('Theme toggle clicked');
                     App.ui.toggleTheme();
                 });
 
@@ -1168,16 +1647,16 @@
                     document.getElementById('userDropdown').classList.remove('show');
                 });
 
-                console.log('=== Security Dashboard initialized successfully ===');
-                console.log('Available users:', JSON.stringify(App.data.users, null, 2));
-                console.log('Current user:', App.data.currentUser);
+                console.log('HDRP Staff Panel initialized successfully');
+                console.log('Available accounts:');
+                console.log('- eigenaar / eigenaar123 (Eigenaar - kan alles)');
+                console.log('- coordinator / coord123 (Staff Coördinatie - kan staff beheren)'); 
+                console.log('- staff1 / staff123 (Staff - alleen kijken)');
             }
         };
 
         // Start the application
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('=== DOM CONTENT LOADED ===');
-            console.log('Starting App initialization...');
             App.init();
         });
     </script>
