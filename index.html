@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Monitoring System</title>
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #21262d;
+            --bg-tertiary: #161b22;
+            --border-color: #30363d;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --accent-primary: #58a6ff;
+            --accent-success: #238636;
+            --accent-warning: #d29922;
+            --accent-danger: #da3633;
+            --accent-critical: #f85149;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f6f8fa;
+            --bg-tertiary: #ffffff;
+            --border-color: #d1d9e0;
+            --text-primary: #24292f;
+            --text-secondary: #656d76;
+            --text-muted: #8c959f;
+            --accent-primary: #0969da;
+            --accent-success: #1a7f37;
+            --accent-warning: #bf8700;
+            --accent-danger: #cf222e;
+            --accent-critical: #d1242f;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        /* Login Screen */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+        }
+
+        .login-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 16px 32px rgba(0,0,0,0.3);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .login-header h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .login-header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .error-message {
+            background: rgba(248, 81, 73, 0.1);
+            border: 1px solid var(--accent-critical);
+            color: var(--accent-critical);
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .success-message {
+            background: rgba(35, 134, 54, 0.1);
+            border: 1px solid var(--accent-success);
+            color: var(--accent-success);
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #4493f8;
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .btn-success {
+            background: var(--accent-success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #2ea043;
+        }
+
+        .btn-danger {
+            background: var(--accent-danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c93025;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.875rem;
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        /* Navigation */
+        .topbar {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .topbar-brand {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 0;
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            padding: 4px;
+        }
+
+        .nav-tab {
+            padding: 8px 16px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .nav-tab.active,
+        .nav-tab:hover {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-menu {
+            position: relative;
+        }
+
+        .user-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
+
+        .user-button:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            min-width: 200px;
+            display: none;
+            z-index: 200;
+        }
+
+        .user-dropdown.active {
+            display: block;
+        }
+
+        .dropdown-item {
+            display: block;
+            padding: 12px 16px;
+            color: var(--text-primary);
+            text-decoration: none;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .dropdown-item.danger:hover {
+            background: rgba(248, 81, 73, 0.1);
+            color: var(--accent-critical);
+        }
+
+        /* Main Content */
+        .main-content {
+            display: none;
+        }
+
+        .main-content.active {
+            display: block;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .page-header {
+            margin-bottom: 24px;
+        }
+
+        .page-header h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 20px;
+            text-align: center;
+            transition: border-color 0.2s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--accent-primary);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* User Management */
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+
+        .user-table th,
+        .user-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .user-table th {
+            background: var(--bg-tertiary);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .user-table tr:hover {
+            background: rgba(88, 166, 255, 0.05);
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .role-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .role-badge.admin {
+            background: rgba(218, 54, 51, 0.1);
+            color: var(--accent-critical);
+        }
+
+        .role-badge.viewer {
+            background: rgba(88, 166, 255, 0.1);
+            color: var(--accent-primary);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: relative;
+            width: 50px;
+            height: 26px;
+            background: var(--border-color);
+            border-radius: 13px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .theme-toggle.active {
+            background: var(--accent-primary);
+        }
+
+        .theme-toggle::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .theme-toggle.active::before {
+            transform: translateX(24px);
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-info h4 {
+            margin-bottom: 4px;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .setting-info p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Form Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-grid-full {
+            grid-column: 1 / -1;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .topbar {
+                padding: 12px 16px;
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .container {
+                padding: 16px;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-tabs {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .user-table {
+                font-size: 0.9rem;
+            }
+
+            .user-actions {
+                flex-direction: column;
+            }
+        }
+
+        /* Hide screens */
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="screen active">
+        <div class="login-container">
+            <div class="login-box">
+                <div class="login-header">
+                    <h1>🔐 Security Dashboard</h1>
+                    <p>Toegang alleen voor geautoriseerd personeel</p>
+                </div>
+                
+                <div id="loginError" class="error-message"></div>
+                <div id="loginSuccess" class="success-message"></div>
+                
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label">Email Adres</label>
+                        <input type="text" id="emailInput" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Wachtwoord</label>
+                        <input type="password" id="passwordInput" class="form-input" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-full">
+                        Inloggen
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="dashboardScreen" class="screen">
+        <!-- Topbar -->
+        <div class="topbar">
+            <div class="topbar-brand">Security Monitoring System</div>
+            
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="showTab('dashboard')">📊 Dashboard</button>
+                <button class="nav-tab" id="userMgmtTab" onclick="showTab('users')" style="display: none;">👥 Gebruikers</button>
+                <button class="nav-tab" onclick="showTab('settings')">⚙️ Instellingen</button>
+            </div>
+
+            <div class="topbar-actions">
+                <div class="user-menu">
+                    <button class="user-button" onclick="toggleUserMenu()">
+                        <span id="currentUserEmail">gebruiker</span>
+                        <span>▼</span>
+                    </button>
+                    <div id="userDropdown" class="user-dropdown">
+                        <a href="#" class="dropdown-item danger" onclick="logout()">🚪 Uitloggen</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboardTab" class="main-content active">
+            <div class="container">
+                <div class="page-header">
+                    <h1>Security Dashboard</h1>
+                    <p>Real-time monitoring van verdachte activiteiten</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">🚨</div>
+                        <div class="stat-number">3</div>
+                        <div class="stat-label">Critical Incidents</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">⚡</div>
+                        <div class="stat-number">7</div>
+                        <div class="stat-label">Suspicious Activity</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-number">2</div>
+                        <div class="stat-label">Financial Anomalies</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">🔒</div>
+                        <div class="stat-number">1</div>
+                        <div class="stat-label">High-Risk Entries</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Recent Security Events</h2>
+                    </div>
+                    <p>Hier komen de real-time security logs...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Management Tab -->
+        <div id="usersTab" class="main-content">
+            <div class="container">
+                <div class="page-header">
+                    <h1>Gebruikersbeheer</h1>
+                    <p>Beheer toegang en permissies van gebruikers</p>
+                </div>
+
+                <!-- Add New User -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Nieuwe Gebruiker Toevoegen</h2>
+                    </div>
+                    
+                    <div id="addUserError" class="error-message"></div>
+                    <div id="addUserSuccess" class="success-message"></div>
+                    
+                    <form id="addUserForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Email/Gebruikersnaam</label>
+                                <input type="text" id="newUserEmail" class="form-input" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Rol</label>
+                                <select id="newUserRole" class="form-select" required>
+                                    <option value="">Selecteer rol</option>
+                                    <option value="viewer">Kijker</option>
+                                    <option value="admin">Administrator</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Tijdelijk Wachtwoord</label>
+                            <input type="password" id="newUserPassword" class="form-input" required>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-success">
+                            👤 Gebruiker Toevoegen
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Existing Users -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Bestaande Gebruikers</h2>
+                        <span id="userCount">0 gebruikers</span>
+                    </div>
+                    
+                    <table class="user-table">
+                        <thead>
+                            <tr>
+                                <th>Email/Gebruiker</th>
+                                <th>Rol</th>
+                                <th>Laatst Actief</th>
+                                <th>Acties</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTableBody">
+                            <!-- Users populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div id="settingsTab" class="main-content">
+            <div class="container">
+                <div class="page-header">
+                    <h1>Instellingen</h1>
+                    <p>Personalisatie en account instellingen</p>
+                </div>
+
+                <!-- Theme Settings -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Weergave</h2>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Dark Mode</h4>
+                            <p>Schakel tussen licht en donker thema</p>
+                        </div>
+                        <div class="theme-toggle" id="themeToggle" onclick="toggleTheme()"></div>
+                    </div>
+                </div>
+
+                <!-- Account Settings -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Account</h2>
+                    </div>
+                    
+                    <div id="passwordChangeError" class="error-message"></div>
+                    <div id="passwordChangeSuccess" class="success-message"></div>
+                    
+                    <form id="passwordChangeForm">
+                        <div class="form-group">
+                            <label class="form-label">Huidig Wachtwoord</label>
+                            <input type="password" id="currentPassword" class="form-input" required>
+                        </div>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Nieuw Wachtwoord</label>
+                                <input type="password" id="newPassword" class="form-input" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Bevestig Nieuw Wachtwoord</label>
+                                <input type="password" id="confirmPassword" class="form-input" required>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">
+                            🔑 Wachtwoord Wijzigen
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize users with default admin account
+        let users = [
+            {
+                email: 'mees',
+                password: 'mees',
+                role: 'admin',
+                lastActive: new Date().toISOString()
+            }
+        ];
+
+        let currentUser = null;
+        let isDarkMode = true;
+
+        // Load data from localStorage
+        function loadData() {
+            const savedUsers = localStorage.getItem('securityUsers');
+            if (savedUsers) {
+                users = JSON.parse(savedUsers);
+            }
+            
+            const savedUser = localStorage.getItem('currentSecurityUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                showDashboard();
+            }
+
+            const savedTheme = localStorage.getItem('securityTheme');
+            if (savedTheme === 'light') {
+                isDarkMode = false;
+                document.body.setAttribute('data-theme', 'light');
+                document.getElementById('themeToggle').classList.add('active');
+            }
+        }
+
+        // Save data to localStorage
+        function saveUsers() {
+            localStorage.setItem('securityUsers', JSON.stringify(users));
+        }
+
+        function saveCurrentUser() {
+            localStorage.setItem('currentSecurityUser', JSON.stringify(currentUser));
+        }
+
+        // Show/hide messages
+        function showMessage(elementId, message, isError = true) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.style.display = 'block';
+            
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 5000);
+        }
+
+        // Login functionality
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('emailInput').value.trim();
+            const password = document.getElementById('passwordInput').value;
+            
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                // Update last active
+                user.lastActive = new Date().toISOString();
+                currentUser = user;
+                saveUsers();
+                saveCurrentUser();
+                showDashboard();
+            } else {
+                showMessage('loginError', 'Ongeldig email adres of wachtwoord');
+            }
+        });
+
+        function showDashboard() {
+            document.getElementById('loginScreen').classList.remove('active');
+            document.getElementById('dashboardScreen').classList.add('active');
+            document.getElementById('currentUserEmail').textContent = currentUser.email;
+            
+            // Show user management tab for admins
+            if (currentUser.role === 'admin') {
+                document.getElementById('userMgmtTab').style.display = 'block';
+            }
+            
+            // Load user management data if admin
+            if (currentUser.role === 'admin') {
+                loadUserManagement();
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('currentSecurityUser');
+            currentUser = null;
+            document.getElementById('loginScreen').classList.add('active');
+            document.getElementById('dashboardScreen').classList.remove('active');
+            
+            // Reset form
+            document.getElementById('loginForm').reset();
+            
+            // Hide user dropdown
+            document.getElementById('userDropdown').classList.remove('active');
+        }
+
+        // Tab functionality
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.main-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active from all nav tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // User menu toggle
+        function toggleUserMenu() {
+            document.getElementById('userDropdown').classList.toggle('active');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.user-menu')) {
+                document.getElementById('userDropdown').classList.remove('active');
+            }
+        });
+
+        // Theme toggle
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            const themeToggle = document.getElementById('themeToggle');
+            
+            if (isDarkMode) {
+                document.body.removeAttribute('data-theme');
+                themeToggle.classList.remove('active');
+                localStorage.setItem('securityTheme', 'dark');
+            } else {
+                document.body.setAttribute('data-theme', 'light');
+                themeToggle.classList.add('active');
+                localStorage.setItem('securityTheme', 'light');
+            }
+        }
+
+        // Password change
+        document.getElementById('passwordChangeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (currentPassword !== currentUser.password) {
+                showMessage('passwordChangeError', 'Huidig wachtwoord is incorrect');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                showMessage('passwordChangeError', 'Nieuwe wachtwoorden komen niet overeen');
+                return;
+            }
+            
+            if (newPassword.length < 3) {
+                showMessage('passwordChangeError', 'Wachtwoord moet minimaal 3 karakters lang zijn');
+                return;
+            }
+            
+            // Update password
+            currentUser.password = newPassword;
+            const userIndex = users.findIndex(u => u.email === currentUser.email);
+            users[userIndex].password = newPassword;
+            
+            saveUsers();
+            saveCurrentUser();
+            
+            showMessage('passwordChangeSuccess', 'Wachtwoord succesvol gewijzigd', false);
+            
+            // Reset form
+            document.getElementById('passwordChangeForm').reset();
+        });
+
+        // Add user functionality
+        document.getElementById('addUserForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('newUserEmail').value.trim();
+            const role = document.getElementById('newUserRole').value;
+            const password = document.getElementById('newUserPassword').value;
+            
+            // Validation
+            if (!email || !role || !password) {
+                showMessage('addUserError', 'Alle velden zijn verplicht');
+                return;
+            }
+            
+            if (users.find(u => u.email === email)) {
+                showMessage('addUserError', 'Gebruiker met dit email/gebruikersnaam bestaat al');
+                return;
+            }
+            
+            if (password.length < 3) {
+                showMessage('addUserError', 'Wachtwoord moet minimaal 3 karakters lang zijn');
+                return;
+            }
+            
+            // Add user
+            users.push({
+                email: email,
+                password: password,
+                role: role,
+                lastActive: new Date().toISOString()
+            });
+            
+            saveUsers();
+            loadUserManagement();
+            
+            showMessage('addUserSuccess', `Gebruiker ${email} succesvol toegevoegd`, false);
+            
+            // Reset form
+            document.getElementById('addUserForm').reset();
+        });
+
+        // Load user management data
+        function loadUserManagement() {
+            const userTableBody = document.getElementById('userTableBody');
+            const userCount = document.getElementById('userCount');
+            
+            if (!userTableBody) return; // Not on user management tab
+            
+            userTableBody.innerHTML = '';
+            userCount.textContent = `${users.length} gebruiker${users.length !== 1 ? 's' : ''}`;
+            
+            users.forEach(user => {
+                const row = document.createElement('tr');
+                const lastActive = new Date(user.lastActive).toLocaleString('nl-NL');
+                
+                row.innerHTML = `
+                    <td>${user.email}</td>
+                    <td><span class="role-badge ${user.role}">${user.role === 'admin' ? 'Administrator' : 'Kijker'}</span></td>
+                    <td>${lastActive}</td>
+                    <td>
+                        <div class="user-actions">
+                            ${user.email !== currentUser.email ? `
+                                <button class="btn btn-danger btn-small" onclick="removeUser('${user.email}')">
+                                    Verwijder
+                                </button>
+                            ` : '<em>Huidige gebruiker</em>'}
+                        </div>
+                    </td>
+                `;
+                
+                userTableBody.appendChild(row);
+            });
+        }
+
+        // Remove user
+        function removeUser(email) {
+            if (confirm(`Weet je zeker dat je gebruiker "${email}" wilt verwijderen?`)) {
+                users = users.filter(u => u.email !== email);
+                saveUsers();
+                loadUserManagement();
+                showMessage('addUserSuccess', `Gebruiker ${email} verwijderd`, false);
+            }
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+        });
