@@ -745,15 +745,15 @@
                 isDarkMode: true
             },
 
-            // Storage methods (using memory only since localStorage is not supported)
+            // Storage methods (using memory with session persistence)
             storage: {
                 save() {
-                    // Data is stored in memory only
-                    console.log('Data would be saved to localStorage');
+                    // Data blijft in geheugen bewaard tijdens de sessie
+                    console.log('Data opgeslagen in geheugen:', JSON.stringify(App.data, null, 2));
                 },
                 load() {
-                    // Load from memory only
-                    console.log('Data would be loaded from localStorage');
+                    // Data wordt alleen geladen uit het geheugen, niet uit localStorage
+                    console.log('Data geladen uit geheugen');
                 }
             },
 
