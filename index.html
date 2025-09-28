@@ -745,20 +745,39 @@ currentUser: null,
 isDarkMode: true
 },
 
-            // Storage methods (using memory only since localStorage is not supported)
             // Storage methods (using memory with session persistence)
+            // Storage methods
 storage: {
 save() {
-                    // Data is stored in memory only
-                    console.log('Data would be saved to localStorage');
                     // Data blijft in geheugen bewaard tijdens de sessie
                     console.log('Data opgeslagen in geheugen:', JSON.stringify(App.data, null, 2));
+                    try {
+                        localStorage.setItem('securityAppData', JSON.stringify(App.data));
+                        console.log('Data succesvol opgeslagen in localStorage:', JSON.stringify(App.data, null, 2));
+                    } catch (e) {
+                        console.warn('Kon niet opslaan in localStorage:', e);
+                    }
 },
 load() {
-                    // Load from memory only
-                    console.log('Data would be loaded from localStorage');
                     // Data wordt alleen geladen uit het geheugen, niet uit localStorage
                     console.log('Data geladen uit geheugen');
+                    try {
+                        const saved = localStorage.getItem('securityAppData');
+                        if (saved) {
+                            const data = JSON.parse(saved);
+                            App.data.users = data.users || App.data.users;
+                            App.data.isDarkMode = data.isDarkMode !== undefined ? data.isDarkMode : true;
+                            if (data.currentUser) {
+                                App.data.currentUser = data.currentUser;
+                                App.ui.showDashboard();
+                            }
+                            console.log('Data succesvol geladen uit localStorage:', JSON.stringify(App.data, null, 2));
+                        } else {
+                            console.log('Geen opgeslagen data gevonden, gebruik default data');
+                        }
+                    } catch (e) {
+                        console.warn('Kon niet laden uit localStorage:', e);
+                    }
 }
 },
 
